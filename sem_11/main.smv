@@ -1,0 +1,36 @@
+-- модуль main - точка входа
+MODULE main
+  VAR
+    request : boolean;
+    state : { ready, busy };
+  ASSIGN
+    -- начальное значение 
+    init(state) := ready;
+    -- следующее значение
+    next(state) := 
+      case
+        state = ready & request : busy;
+        -- в противном случае - либо ready, либо busy (не детерминированно)
+        TRUE : { ready, busy };
+      esac;
+
+-- запуск 
+
+-- ./NuSMV main.smv
+-- строится трушная BDD модель
+
+-- ./NuSMV -bmc -bmc_length k main.smv
+-- ограниченная проверка модели (SAT-based)
+
+-- ./NuSMV -int main.smv
+-- -int интерактивный режим
+
+-- В терминале NuSMV:
+-- read_model -i main.smv
+-- flatten_hierarchy
+-- simulate
+-- encode_variables
+-- build_model
+-- pick_state
+-- simulate
+-- show_traces
